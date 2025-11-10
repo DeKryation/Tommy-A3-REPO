@@ -9,11 +9,15 @@ public class CrabMove : MonoBehaviour
     private Rigidbody rb;
     public Crab_InputSys crabInput;
     public GameObject interactable;
+    public Camera cam;
+
     public float moveSpeed;
     public float jumpForce;
+    RaycastHit rayHit;
 
     InputAction pWASD;
     InputAction pJump;
+    InputAction pLook;
     InputAction pInteract;
     private void Awake()
     {
@@ -34,6 +38,9 @@ public class CrabMove : MonoBehaviour
         pJump.Enable();
         pJump.performed += Jump;
 
+        pLook = crabInput.Player.Look; //mouse to look around
+        pLook.Enable();
+
         pInteract = crabInput.Player.Interact; //E to interact.
         pInteract.Enable();
         pInteract.performed += TryInteract;
@@ -48,7 +55,6 @@ public class CrabMove : MonoBehaviour
     void Update()
     {
         Vector2 moveDir = pWASD.ReadValue<Vector2>();
-        //Debug.Log("directions: x " + moveDir.x + ", y " + moveDir.y);
         transform.position += new Vector3(moveDir.x, 0, moveDir.y) * moveSpeed * Time.deltaTime;
     }
     private void Jump(InputAction.CallbackContext context)
@@ -69,6 +75,15 @@ public class CrabMove : MonoBehaviour
             Debug.Log("No interactable detected");
         }
     }
+
+    private void TryAttach(InputAction.CallbackContext context)
+    {
+        if (interactable != null ) //&& drawraycast, detect its human
+        {
+            
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Interactable")

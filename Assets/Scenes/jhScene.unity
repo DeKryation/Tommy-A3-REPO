@@ -5956,6 +5956,10 @@ PrefabInstance:
       propertyPath: popup
       value: 
       objectReference: {fileID: 1583242156}
+    - target: {fileID: 2779820755794671966, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}
+      propertyPath: mask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4045441974530215945, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}

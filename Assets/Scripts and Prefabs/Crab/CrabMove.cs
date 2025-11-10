@@ -9,7 +9,6 @@ public class CrabMove : MonoBehaviour
     private Rigidbody rb;
     public Crab_InputSys crabInput;
     public GameObject interactable;
-    public Camera cam;
 
     public float moveSpeed;
     public float jumpForce;

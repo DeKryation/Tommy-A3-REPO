@@ -64,9 +64,13 @@ public class CameraScript : MonoBehaviour
             popup.SetActive(false);
             interactable = null;
         }
-        //reference crabmove, set interactable to crabmove's interactable
+        //reference inputhandler, set interactable to inputhandler's interactable
         inputHandler.SetInteractable(interactable);
     }
-
+    public float GetLookDir()
+    {
+        float dir = mouseDelta.x; //neg goes left
+        return dir;
+    }
    
 }

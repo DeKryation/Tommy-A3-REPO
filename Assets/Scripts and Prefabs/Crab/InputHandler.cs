@@ -9,9 +9,12 @@ public class InputHandler : MonoBehaviour
     private Rigidbody rb;
     public Crab_InputSys crabInput;
     private GameObject interactable;
+    public CameraScript camScript;
+    public GameObject crabModel;
 
     public float moveSpeed;
     public float jumpForce;
+    public float rotationSpeed;
     RaycastHit rayHit;
 
     InputAction pWASD;
@@ -27,6 +30,7 @@ public class InputHandler : MonoBehaviour
         bc = GetComponent<BoxCollider>();
         cc = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
+        camScript = GetComponentInChildren<CameraScript>();
     }
     private void OnEnable()
     {
@@ -53,8 +57,10 @@ public class InputHandler : MonoBehaviour
 
     void Update()
     {
-        Vector2 moveDir = pWASD.ReadValue<Vector2>();
-        transform.position += new Vector3(moveDir.x, 0, moveDir.y) * moveSpeed * Time.deltaTime;
+        TurnToDir();
+        //Vector2 moveDir = pWASD.ReadValue<Vector2>();
+        //transform.position += new Vector3(moveDir.x, 0, moveDir.y) * moveSpeed * Time.deltaTime;
+        MoveToDir();
     }
     private void Jump(InputAction.CallbackContext context)
     {
@@ -87,6 +93,19 @@ public class InputHandler : MonoBehaviour
         interactable = incoming;
     }
 
+    private void TurnToDir()
+    {
+        float dir = camScript.GetLookDir();
+        crabModel.transform.eulerAngles += new Vector3(0, dir * rotationSpeed, 0);
+    }
+    private void MoveToDir()
+    {
+        Vector2 rawMoveDir = pWASD.ReadValue<Vector2>();
+        Vector3 moveDir = crabModel.transform.forward * rawMoveDir.y + crabModel.transform.right * rawMoveDir.x;//insert new direction here
+        moveDir.y = 0f;
+        moveDir.Normalize();
+        rb.MovePosition(rb.position + moveDir * moveSpeed * Time.fixedDeltaTime);
+    }
     //private void OnTriggerEnter(Collider other)
     //{
     //    if (other.gameObject.tag == "Interactable")

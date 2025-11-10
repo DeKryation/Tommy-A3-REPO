@@ -6,4 +6,9 @@ public class InteractScript : MonoBehaviour
     {
 
     }
+
+    public virtual void DoOnRaycastHit()
+    {
+
+    }
 }

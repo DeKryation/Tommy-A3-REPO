@@ -12,4 +12,9 @@ public class TestInteract : InteractScript
         Debug.Log("yes this works");
         particle.Play();
     }
+
+    public override void DoOnRaycastHit()
+    {
+        Debug.Log("Raycast hit");
+    }
 }

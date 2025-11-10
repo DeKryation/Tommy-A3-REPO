@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 215176610135873429}
   - component: {fileID: 8203621759030099486}
   - component: {fileID: 7714398487752313682}
-  - component: {fileID: 4160015634513209588}
   - component: {fileID: 8212774472955422065}
   - component: {fileID: 467662840387774116}
   m_Layer: 0
@@ -99,24 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 676c1856744b53e48ac1ed24ecd25451, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactable: {fileID: 0}
-  cam: {fileID: 0}
-  moveSpeed: 0
-  jumpForce: 0
---- !u!114 &4160015634513209588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1190823318438187030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 676c1856744b53e48ac1ed24ecd25451, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactable: {fileID: 0}
-  cam: {fileID: 0}
   moveSpeed: 2
   jumpForce: 3
 --- !u!114 &8212774472955422065
@@ -219,7 +200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseDelta: {x: 0, y: 0}
   transformOffset: {x: 0, y: 0.27, z: -0.51}
-  test: {fileID: 0}
+  interactable: {fileID: 0}
   mask:
     serializedVersion: 2
     m_Bits: 4294967295

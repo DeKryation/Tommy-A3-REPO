@@ -2,13 +2,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CrabMove : MonoBehaviour
+public class InputHandler : MonoBehaviour
 {
     private BoxCollider bc;
     private CapsuleCollider cc;
     private Rigidbody rb;
     public Crab_InputSys crabInput;
-    public GameObject interactable;
+    private GameObject interactable;
 
     public float moveSpeed;
     public float jumpForce;
@@ -82,20 +82,24 @@ public class CrabMove : MonoBehaviour
             
         }
     }
+    public void SetInteractable(GameObject incoming)
+    {
+        interactable = incoming;
+    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Interactable")
-        {
-            Debug.Log("interactable detected!");
-            interactable = other.gameObject;
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (interactable != null && other.gameObject.tag == "Interactable")
-        {
-            interactable = null;
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.tag == "Interactable")
+    //    {
+    //        Debug.Log("interactable detected!");
+    //        interactable = other.gameObject;
+    //    }
+    //}
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (interactable != null && other.gameObject.tag == "Interactable")
+    //    {
+    //        interactable = null;
+    //    }
+    //}
 }

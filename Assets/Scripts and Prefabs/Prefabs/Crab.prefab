@@ -99,10 +99,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camScript: {fileID: 0}
-  crabModel: {fileID: 0}
+  crabModel: {fileID: 3180181170969406093}
   moveSpeed: 2
   jumpForce: 3
-  rotationSpeed: 0
+  rotationSpeed: 0.1
 --- !u!114 &8212774472955422065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,7 +206,7 @@ MonoBehaviour:
   interactable: {fileID: 0}
   mask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 64
   popup: {fileID: 0}
 --- !u!1 &3330440128049705106
 GameObject:
@@ -405,5 +405,10 @@ PrefabInstance:
 --- !u!4 &2839965143817007159 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 117792904169311382, guid: e89e50dac13b0164989d708c09739b5f, type: 3}
+  m_PrefabInstance: {fileID: 2795584479792921761}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3180181170969406093 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 786349452484056620, guid: e89e50dac13b0164989d708c09739b5f, type: 3}
   m_PrefabInstance: {fileID: 2795584479792921761}
   m_PrefabAsset: {fileID: 0}

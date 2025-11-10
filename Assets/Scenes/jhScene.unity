@@ -5475,6 +5475,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 46189391}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1358428309 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3180181170969406093, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}
+  m_PrefabInstance: {fileID: 407541603540972511}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1448839816
 GameObject:
   m_ObjectHideFlags: 0
@@ -5904,6 +5909,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 215176610135873429, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}
+      propertyPath: m_Size.z
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 620161914213008160, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.31
@@ -5959,6 +5968,14 @@ PrefabInstance:
     - target: {fileID: 2779820755794671966, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}
       propertyPath: mask.m_Bits
       value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714398487752313682, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}
+      propertyPath: crabModel
+      value: 
+      objectReference: {fileID: 1358428309}
+    - target: {fileID: 7714398487752313682, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}
+      propertyPath: rotationSpeed
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

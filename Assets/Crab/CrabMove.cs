@@ -14,7 +14,7 @@ public class CrabMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input)
+        if (Input.GetKeyDown("w"))
         {
             transform.position += new Vector3(0, 0, 0.1f);
         }

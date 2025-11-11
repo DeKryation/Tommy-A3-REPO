@@ -101,7 +101,7 @@ MonoBehaviour:
   camScript: {fileID: 0}
   crabModel: {fileID: 3180181170969406093}
   moveSpeed: 2
-  jumpForce: 3
+  jumpForce: 4
   rotationSpeed: 0.1
 --- !u!114 &8212774472955422065
 MonoBehaviour:

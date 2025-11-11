@@ -29,6 +29,7 @@ public class CameraScript : MonoBehaviour
         float newY = mouseDelta.y * -1;
         Vector3 rotation = new Vector3(newY * rotSpd, mouseDelta.x * rotSpd , 0);
         transform.eulerAngles += rotation;
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
 
         ///Raycast interaction - joycelyn
         CheckInteraction();

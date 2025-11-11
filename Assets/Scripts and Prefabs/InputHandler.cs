@@ -97,6 +97,7 @@ public class InputHandler : MonoBehaviour
     {
         float dir = camScript.GetLookDir();
         crabModel.transform.eulerAngles += new Vector3(0, dir * rotationSpeed, 0);
+        crabModel.transform.eulerAngles = new Vector3(0, crabModel.transform.eulerAngles.y, 0);
     }
     private void MoveToDir()
     {

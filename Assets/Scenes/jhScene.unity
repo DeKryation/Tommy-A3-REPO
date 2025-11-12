@@ -5308,11 +5308,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!54 &527377921 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 8203621759030099486, guid: d1a5bf2009e9edc40a8d9ca999076336, type: 3}
-  m_PrefabInstance: {fileID: 407541603540972511}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &584581866
 GameObject:
   m_ObjectHideFlags: 0
@@ -10818,10 +10813,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1604170969150337167, guid: ff41339e9c345d24fb50c28ec393f087, type: 3}
-      propertyPath: crabGameObject
-      value: 
-      objectReference: {fileID: 527377921}
     - target: {fileID: 4710593031455478480, guid: ff41339e9c345d24fb50c28ec393f087, type: 3}
       propertyPath: m_Name
       value: VentParent
@@ -10881,7 +10872,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2810445029639323706, guid: cb0f0777072b8454197d15d67013406c, type: 3}
       propertyPath: m_Name
-      value: PopUp_E
+      value: PopUp_Button
       objectReference: {fileID: 0}
     - target: {fileID: 7537570035655704302, guid: cb0f0777072b8454197d15d67013406c, type: 3}
       propertyPath: m_Pivot.x

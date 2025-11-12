@@ -21,6 +21,7 @@ public class InputHandler : MonoBehaviour
     InputAction pJump;
     InputAction pLook;
     InputAction pInteract;
+    InputAction pSwitch;
     private void Awake()
     {
         crabInput = new Crab_InputSys();
@@ -44,9 +45,13 @@ public class InputHandler : MonoBehaviour
         pLook = crabInput.Player.Look; //mouse to look around
         pLook.Enable();
 
-        pInteract = crabInput.Player.Interact; //E to interact.
+        pInteract = crabInput.Player.Attack; //LMB to interact.
         pInteract.Enable();
         pInteract.performed += TryInteract;
+
+        pSwitch = crabInput.Player.Crouch; //Left Ctrl to switch between player and crab.
+        pSwitch.Enable();
+        pSwitch.performed += TryAttach;
     }
     private void OnDisable()
     {
@@ -83,10 +88,7 @@ public class InputHandler : MonoBehaviour
 
     private void TryAttach(InputAction.CallbackContext context)
     {
-        if (interactable != null ) //&& drawraycast, detect its human
-        {
-            
-        }
+        DetachHandlerScript.GetInstance().DoSwitch();
     }
     public void SetInteractable(GameObject incoming)
     {

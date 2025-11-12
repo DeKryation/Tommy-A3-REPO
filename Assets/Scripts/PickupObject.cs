@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class PickupObject : MonoBehaviour
@@ -6,7 +7,7 @@ public class PickupObject : MonoBehaviour
 
     public GameObject player;
     public float pickUpRange = 5f;
-
+    public LayerMask mask;
 
     void Update()
     {
@@ -30,10 +31,9 @@ public class PickupObject : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickUpRange) && hit.transform.GetComponent<InteractableItem>() != null)
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickUpRange, mask) && hit.transform.GetComponent<InteractScript>() != null)
             {
-                    hit.transform.GetComponent<InteractableItem>().DoOnInteract();
-
+                hit.transform.GetComponent<InteractScript>().DoOnInteract();
             }
             else
             {

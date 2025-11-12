@@ -60,7 +60,7 @@ namespace NavKeypad
                     }
                 default:
                     {
-                        if (currentInput != null && currentInput.Length == 9) // 9 max passcode size 
+                        if (currentInput != null && currentInput.Length == 4) // 9 max passcode size 
                         {
                             return;
                         }
@@ -83,7 +83,6 @@ namespace NavKeypad
             }
             else
             {
-                Debug.LogWarning("Couldn't process input for some reason..");
             }
 
         }

@@ -23,7 +23,7 @@ public class LinePuller : MonoBehaviour
     private ConnectionPoint startPoint;
     private ConnectionPoint hoveredPoint;
     
-    private CrabMove crabMove;
+    private InputHandler crabMove;
     private InputAction interactAction;
     
     void Awake()
@@ -36,7 +36,7 @@ public class LinePuller : MonoBehaviour
     {
         if (playerTransform != null)
         {
-            crabMove = playerTransform.GetComponent<CrabMove>();
+            crabMove = playerTransform.GetComponent<InputHandler>();
             if (crabMove != null && crabMove.crabInput != null)
             {
                 interactAction = crabMove.crabInput.Player.Interact;

@@ -7,7 +7,7 @@ namespace NavKeypad
     {
         [SerializeField] private Animator anim;
         public bool IsOpoen => isOpen;
-        private bool isOpen = false;
+        private bool isOpen = false; 
 
         public void ToggleDoor()
         {

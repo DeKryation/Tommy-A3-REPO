@@ -5,6 +5,8 @@ public class BoxMove : InteractScript
 {
     public Transform point1;
     public Transform point2;
+    public GameObject fan;
+
     private void Awake()
     {
         transform.position = point1.position;
@@ -13,6 +15,9 @@ public class BoxMove : InteractScript
     {
         if (transform.position != point2.position)
         {
+            ParticleSystem ps = fan.GetComponentInChildren<ParticleSystem>();
+            var main = ps.main;
+            main.startLifetime = 0.5f;
             StartCoroutine(MoveObject());
         }
     }
@@ -24,6 +29,7 @@ public class BoxMove : InteractScript
     IEnumerator MoveObject()
     {
         float timeSinceStarted = 0f;
+        
         while (true)
         {
             timeSinceStarted += Time.deltaTime;

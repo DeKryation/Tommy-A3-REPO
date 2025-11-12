@@ -50,6 +50,7 @@ public class SafeDoor : MonoBehaviour
         _startTime = Time.time + Mathf.Max(0f, delayBeforeOpen);
         _opening = true;
     }
+
     public void OpenInstant()
     {
         var e = doorTransform.localEulerAngles;

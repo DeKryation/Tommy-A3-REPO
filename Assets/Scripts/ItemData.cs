@@ -16,8 +16,6 @@ public class ItemData : MonoBehaviour
 
     MERGE ITEM ID
     -1 -- cant be combined
-    0 -- Flashlight and batteries
-    1 -- half key 1 and 2
     */
     public string objectName;
 

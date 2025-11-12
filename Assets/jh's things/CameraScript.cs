@@ -48,14 +48,14 @@ public class CameraScript : MonoBehaviour
         
         
         //if hit, show the interact button and play particle
-        if (Physics.Raycast(ray, out hit, 1000, mask))
+        if (Physics.Raycast(ray, out hit, 2, mask))
         {
-            Debug.Log(hit.collider.transform.gameObject.name);
-            Debug.DrawRay(cam.transform.position, cam.transform.forward * 10, Color.green);
+            //Debug.Log(hit.collider.transform.gameObject.name);
+            Debug.DrawRay(cam.transform.position, cam.transform.forward , Color.green);
             if (hit.collider.gameObject.tag == "Interactable")
             {
                 interactable = hit.transform.gameObject;
-                Debug.Log("interactable hit with raycast.");
+                //Debug.Log("interactable hit with raycast.");
                 popup.SetActive(true);
                 interactable.GetComponent<InteractScript>().DoOnRaycastHit();
             }

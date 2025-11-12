@@ -1,13 +1,13 @@
+using System.Collections;
 using UnityEngine;
 
 public class KeyScript : MonoBehaviour
 {
-    ParticleSystem idle;
-    ParticleSystem explode;
-    MeshCollider meshC;
+    public ParticleSystem explode;
+    public GameObject keyHud;
+    public GameObject self;
     void Start()
     {
-        meshC = GetComponent<MeshCollider>();
     }
 
     void Update()
@@ -15,17 +15,23 @@ public class KeyScript : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision != null && collision.gameObject.tag == "Player")
+        if (other != null && other.gameObject.tag == "Player")
         {
-            idle.Stop();
             explode.Play();
-            var keyUI = GameObject.Find("/Canvas/keyHUD");
-            if (keyUI != null && !keyUI.activeInHierarchy)
+            if (keyHud != null && !keyHud.activeInHierarchy)
             {
-                keyUI.SetActive(true);
+                keyHud.SetActive(true);
             }
+            StartCoroutine(Die());
         }
     }
+
+    IEnumerator Die()
+    {
+        yield return new WaitForSeconds(0.3f);
+        self.SetActive(false);
+    }
+
 }

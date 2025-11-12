@@ -18,6 +18,8 @@ public class BoxMove : InteractScript
             ParticleSystem ps = fan.GetComponentInChildren<ParticleSystem>();
             var main = ps.main;
             main.startLifetime = 0.5f;
+            BoxCollider bc = fan.GetComponentInChildren<BoxCollider>();
+            bc.enabled = false;
             StartCoroutine(MoveObject());
         }
     }

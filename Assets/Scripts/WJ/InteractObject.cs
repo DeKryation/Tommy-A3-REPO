@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 
 public class InteractObject : MonoBehaviour
@@ -11,29 +11,40 @@ public class InteractObject : MonoBehaviour
     [Header("Highlight Settings")]
     [SerializeField] private Material highlightMaterial;
     private Material originalMaterial;
-    private Renderer meshRenderer;
     private GameObject currentLookTarget;
     private bool isHighlighted = false;
     
-    [Header("UI Message Settings")]
-    [SerializeField] private Text messageText;
-    [SerializeField] private float displayDuration = 2f;
+    [Header("UI Text Settings")]
+    [SerializeField] private TextMeshProUGUI hoverText;
+    [SerializeField] private TextMeshProUGUI messageText;
+    [SerializeField] private float messageDuration = 2f;
     [SerializeField] private float fadeSpeed = 2f;
-    private Coroutine currentFade;
+    
+    [Header("Connection Messages")]
+    [SerializeField] private string hoverPortMessage = "Connection Port";
+    [SerializeField] private string wrongConnectionMessage = "Wrong connection! Colors must match";
+    [SerializeField] private string allConnectionsCompleteMessage = "All ports connected! Restoring lights...";
+    
+    private Coroutine messageFadeCoroutine;
     
     [Header("Script References")]
     [SerializeField] private LinePuller linePuller;
+    [SerializeField] private AudioManager audioManager;
 
     void Awake()
     {
-        meshRenderer = GetComponent<Renderer>();
-        if (meshRenderer != null)
-        {
-            originalMaterial = meshRenderer.sharedMaterial;
-        }
-        
         if (linePuller == null)
             linePuller = GetComponent<LinePuller>();
+        
+        if (audioManager == null)
+            audioManager = FindObjectOfType<AudioManager>();
+        
+        // Hide texts at start
+        if (hoverText != null)
+        {
+            hoverText.text = "";
+            hoverText.gameObject.SetActive(false);
+        }
         
         if (messageText != null)
         {
@@ -59,27 +70,62 @@ public class InteractObject : MonoBehaviour
 
         if (hitSomething)
         {
-            if (currentLookTarget != hit.transform.gameObject)
+            GameObject hitObject = hit.transform.gameObject;
+            
+            if (currentLookTarget != hitObject)
             {
                 ClearHighlight();
-                currentLookTarget = hit.transform.gameObject;
-                HighlightTarget(currentLookTarget, true);
+                currentLookTarget = hitObject;
                 
-                // Show hover text for interactable objects
-                InteractScript interactScript = currentLookTarget.GetComponent<InteractScript>();
-                if (interactScript != null)
-                {
-                    ShowMessage("Press [LMB] to interact");
-                }
-                
-                // Show hover text for connection points
+                // Check for ConnectionPoint
                 ConnectionPoint connectionPoint = currentLookTarget.GetComponent<ConnectionPoint>();
                 if (connectionPoint != null && connectionPoint.IsInteractable())
                 {
-                    ShowMessage("Connection Port");
-                    if (GameAudioManager.Instance != null)
+                    connectionPoint.Highlight(true);
+                    ShowHoverText(hoverPortMessage);
+                    
+                    if (audioManager != null)
                     {
-                        GameAudioManager.Instance.PlaySFX(GameSFX.HoverPort);
+                        audioManager.PlaySFX(GameSFX.HoverPort);
+                    }
+                }
+                // Check for BreakerInteract
+                else
+                {
+                    BreakerInteract breakerInteract = currentLookTarget.GetComponent<BreakerInteract>();
+                    if (breakerInteract != null)
+                    {
+                        ShowHoverText(breakerInteract.GetHoverText());
+                        HighlightWithMaterial(currentLookTarget, true);
+                    }
+                    // Check for DoorInteract
+                    else
+                    {
+                        DoorInteract doorInteract = currentLookTarget.GetComponent<DoorInteract>();
+                        if (doorInteract != null)
+                        {
+                            ShowHoverText(doorInteract.GetHoverText());
+                            HighlightWithMaterial(currentLookTarget, true);
+                        }
+                        // Check for items
+                        else
+                        {
+                            InteractScript interactScript = currentLookTarget.GetComponent<InteractScript>();
+                            if (interactScript != null)
+                            {
+                                ItemData itemData = currentLookTarget.GetComponent<ItemData>();
+                                if (itemData != null)
+                                {
+                                    ShowHoverText(itemData.objectName);
+                                }
+                                else
+                                {
+                                    ShowHoverText("Press [LMB] to interact");
+                                }
+                                
+                                HighlightWithMaterial(currentLookTarget, true);
+                            }
+                        }
                     }
                 }
             }
@@ -87,6 +133,7 @@ public class InteractObject : MonoBehaviour
         else
         {
             ClearHighlight();
+            HideHoverText();
         }
     }
 
@@ -94,34 +141,23 @@ public class InteractObject : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            // Priority 1: Let LinePuller try to handle the interaction first
+            // Priority 1: LinePuller for connection points
             if (linePuller != null && linePuller.TryHandleInteraction())
             {
                 return;
             }
             
-            // Priority 2: Handle general interactions
+            // Priority 2: InteractScript (includes InteractableItem for items)
             Camera cam = Camera.main;
             Ray ray = new Ray(cam.transform.position, cam.transform.forward);
             RaycastHit hit;
             
             if (Physics.Raycast(ray, out hit, interactRange, interactionMask))
             {
-                // Try InteractScript
                 InteractScript interactScript = hit.transform.GetComponent<InteractScript>();
                 if (interactScript != null)
                 {
                     interactScript.DoOnInteract();
-                    ShowMessage("Interaction successful!");
-                    return;
-                }
-
-                // Try ConnectionPoint (backup)
-                ConnectionPoint connectionPoint = hit.transform.GetComponent<ConnectionPoint>();
-                if (connectionPoint != null)
-                {
-                    Vector3 position = connectionPoint.GetPosition();
-                    Debug.Log($"Tried to interact with connection point at {position}");
                     return;
                 }
             }
@@ -131,7 +167,7 @@ public class InteractObject : MonoBehaviour
         }
     }
 
-    private void HighlightTarget(GameObject target, bool highlight)
+    private void HighlightWithMaterial(GameObject target, bool highlight)
     {
         if (target == null)
             return;
@@ -150,52 +186,81 @@ public class InteractObject : MonoBehaviour
 
     private void ClearHighlight()
     {
-        if (currentLookTarget != null && isHighlighted)
+        if (currentLookTarget != null)
         {
-            Renderer targetRenderer = currentLookTarget.GetComponent<Renderer>();
-            if (targetRenderer != null && originalMaterial != null)
+            ConnectionPoint connectionPoint = currentLookTarget.GetComponent<ConnectionPoint>();
+            if (connectionPoint != null)
             {
-                targetRenderer.sharedMaterial = originalMaterial;
+                connectionPoint.Highlight(false);
             }
+            else if (isHighlighted)
+            {
+                Renderer targetRenderer = currentLookTarget.GetComponent<Renderer>();
+                if (targetRenderer != null && originalMaterial != null)
+                {
+                    targetRenderer.sharedMaterial = originalMaterial;
+                }
+            }
+            
             isHighlighted = false;
         }
         currentLookTarget = null;
     }
-
-    public void Highlight(bool highlight)
-    {
-        if (meshRenderer == null || isHighlighted == highlight)
-            return;
-            
-        isHighlighted = highlight;
-        meshRenderer.sharedMaterial = highlight ? highlightMaterial : originalMaterial;
-    }
-
-    public Vector3 GetPosition()
-    {
-        return transform.position;
-    }
     
-    // Public method to show messages and play error sound
-    public void ShowMessage(string message, bool isError = false)
+    private void ShowHoverText(string text)
     {
-        if (messageText == null)
-            return;
-        
-        if (currentFade != null)
-            StopCoroutine(currentFade);
-        
-        messageText.text = message;
-        currentFade = StartCoroutine(FadeInAndOut());
-        
-        // Play error sound if it's an error message
-        if (isError && GameAudioManager.Instance != null)
+        if (hoverText != null)
         {
-            GameAudioManager.Instance.PlaySFX(GameSFX.ConnectionError);
+            hoverText.gameObject.SetActive(true);
+            hoverText.text = text;
         }
     }
     
-    private IEnumerator FadeInAndOut()
+    private void HideHoverText()
+    {
+        if (hoverText != null)
+        {
+            hoverText.text = "";
+            hoverText.gameObject.SetActive(false);
+        }
+    }
+    
+    // Public method for connection messages
+    public void ShowConnectionMessage(string messageType, bool isError = false)
+    {
+        string message = "";
+        
+        switch (messageType)
+        {
+            case "wrong":
+                message = wrongConnectionMessage;
+                break;
+            case "complete":
+                message = allConnectionsCompleteMessage;
+                break;
+        }
+        
+        ShowMessage(message, isError);
+    }
+    
+    public void ShowMessage(string message, bool isError = false)
+    {
+        if (messageText == null || string.IsNullOrEmpty(message))
+            return;
+        
+        if (messageFadeCoroutine != null)
+            StopCoroutine(messageFadeCoroutine);
+        
+        messageText.text = message;
+        messageFadeCoroutine = StartCoroutine(FadeMessageInAndOut());
+        
+        if (isError && audioManager != null)
+        {
+            audioManager.PlaySFX(GameSFX.ConnectionError);
+        }
+    }
+    
+    private IEnumerator FadeMessageInAndOut()
     {
         Color color = messageText.color;
         
@@ -210,7 +275,7 @@ public class InteractObject : MonoBehaviour
         }
         
         // Stay visible
-        yield return new WaitForSeconds(displayDuration);
+        yield return new WaitForSeconds(messageDuration);
         
         // Fade out
         elapsed = 0;
@@ -224,5 +289,10 @@ public class InteractObject : MonoBehaviour
         
         color.a = 0;
         messageText.color = color;
+    }
+    
+    public AudioManager GetAudioManager()
+    {
+        return audioManager;
     }
 }

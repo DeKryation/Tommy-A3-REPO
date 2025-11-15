@@ -12,7 +12,7 @@ public class ConnectionSet
     
     [HideInInspector] public GameObject activeLineInstance;
     [HideInInspector] public bool isCompleted = false;
-    
+
     public bool IsValid()
     {
         return portA != null && portB != null && connectionType != null;
@@ -33,6 +33,9 @@ public class PortManager : MonoBehaviour
 {
     [SerializeField] private List<ConnectionSet> connectionSets = new List<ConnectionSet>();
     [SerializeField] private GameObject defaultLinePrefab;
+    
+    [Header("Breaker Settings")]
+    [SerializeField] private BreakerInteract breaker;
     
     private static PortManager instance;
     
@@ -90,7 +93,6 @@ public class PortManager : MonoBehaviour
                 set.isCompleted = true;
                 set.activeLineInstance = lineInstance;
                 
-                // Make sure ports are disabled
                 if (set.portA != null)
                 {
                     set.portA.SetInteractable(false);
@@ -115,24 +117,38 @@ public class PortManager : MonoBehaviour
             return set.linePrefab;
         return defaultLinePrefab;
     }
-    
-private void CheckAllComplete()
-{
-    foreach (ConnectionSet set in connectionSets)
+
+    private void CheckAllComplete()
     {
-        if (!set.isCompleted)
-            return;
+        foreach (ConnectionSet set in connectionSets)
+        {
+            if (!set.isCompleted)
+            {
+                Debug.Log($"Set '{set.setName}' is not complete yet");
+                return;
+            }
+        }
+        
+        Debug.Log("ALL CONNECTIONS COMPLETE! Unlocking breaker...");
+        
+        // Unlock the breaker
+        if (breaker != null)
+        {
+            Debug.Log("Calling UnlockBreaker()");
+            breaker.UnlockBreaker();
+        }
+        else
+        {
+            Debug.LogError("Breaker reference is NULL in PortManager!");
+        }
+        
+        // Show message
+        InteractObject interactObject = FindObjectOfType<InteractObject>();
+        if (interactObject != null)
+        {
+            interactObject.ShowMessage("All ports connected! Now activate the breaker.");
+        }
     }
-    
-    Debug.Log("ALL CONNECTIONS COMPLETE!");
-    
-    // Light up the room!
-    LightController lightController = FindObjectOfType<LightController>();
-    if (lightController != null)
-    {
-        lightController.LightUpRoom();
-    }
-}
 
     
     [ContextMenu("Reset All Connections")]

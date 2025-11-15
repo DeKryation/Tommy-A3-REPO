@@ -3,11 +3,15 @@ using UnityEngine;
 public class ConnectionPoint : MonoBehaviour
 {
     [SerializeField] private ConnectionType connectionType;
-    [SerializeField] private Material highlightMaterial;
+    [SerializeField] private float glowIntensity = 3f;
     
-    private Material originalMaterial;
+    [Header("Hover Text")]
+    [SerializeField] private string customHoverText = "Connection Port";
+    
     private Renderer meshRenderer;
     private Collider pointCollider;
+    private Material materialInstance;
+    private Color baseColor;
     private bool isHighlighted = false;
     private bool isInteractable = true;
     
@@ -18,13 +22,27 @@ public class ConnectionPoint : MonoBehaviour
         
         if (meshRenderer != null)
         {
-            originalMaterial = meshRenderer.sharedMaterial;
+            materialInstance = meshRenderer.material;
             
             if (connectionType != null)
             {
-                meshRenderer.material.color = connectionType.typeColor;
+                baseColor = connectionType.typeColor;
+                materialInstance.color = baseColor;
             }
+            else
+            {
+                baseColor = materialInstance.color;
+            }
+            
+            materialInstance.EnableKeyword("_EMISSION");
+            materialInstance.SetColor("_EmissionColor", Color.black);
         }
+    }
+    
+    void OnDestroy()
+    {
+        if (materialInstance != null)
+            Destroy(materialInstance);
     }
     
     public void Highlight(bool highlight)
@@ -33,7 +51,16 @@ public class ConnectionPoint : MonoBehaviour
             return;
         
         isHighlighted = highlight;
-        meshRenderer.sharedMaterial = highlight ? highlightMaterial : originalMaterial;
+        
+        if (highlight)
+        {
+            Color glowColor = baseColor * glowIntensity;
+            materialInstance.SetColor("_EmissionColor", glowColor);
+        }
+        else
+        {
+            materialInstance.SetColor("_EmissionColor", Color.black);
+        }
     }
     
     public Vector3 GetPosition()
@@ -61,8 +88,13 @@ public class ConnectionPoint : MonoBehaviour
         if (!interactable && isHighlighted)
         {
             isHighlighted = false;
-            if (meshRenderer != null)
-                meshRenderer.sharedMaterial = originalMaterial;
+            materialInstance.SetColor("_EmissionColor", Color.black);
         }
+    }
+    
+    // Get custom hover text
+    public string GetHoverText()
+    {
+        return customHoverText;
     }
 }

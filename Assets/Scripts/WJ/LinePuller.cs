@@ -8,10 +8,6 @@ public class LinePuller : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Camera playerCamera;
     
-    [Header("Audio")]
-    [SerializeField] private AudioClip errorSound;
-    [SerializeField] private AudioSource audioSource;
-    
     private enum LineState { Idle, Pulling }
     private LineState currentState = LineState.Idle;
     
@@ -24,15 +20,6 @@ public class LinePuller : MonoBehaviour
     {
         if (playerCamera == null)
             playerCamera = Camera.main;
-        
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
-        
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false;
-        }
     }
     
     void Update()
@@ -104,29 +91,36 @@ public class LinePuller : MonoBehaviour
         return false;
     }
     
-    void TryStartPulling()
+void TryStartPulling()
+{
+    if (hoveredPoint == null || !hoveredPoint.IsInteractable())
+        return;
+    
+    if (PortManager.Instance == null)
     {
-        if (hoveredPoint == null || !hoveredPoint.IsInteractable())
-            return;
-        
-        if (PortManager.Instance == null)
+        Debug.LogError("PortManager not found!");
+        return;
+    }
+    
+    ConnectionSet set = PortManager.Instance.GetSetForPort(hoveredPoint);
+    if (set == null)
+    {
+        if (ItemManager.GetInstance() != null)
         {
-            Debug.LogError("PortManager not found!");
-            return;
+            ItemManager.GetInstance().StartDialogue("This port is not part of any connection");
         }
-        
-        ConnectionSet set = PortManager.Instance.GetSetForPort(hoveredPoint);
-        if (set == null)
+        return;
+    }
+    
+    if (set.isCompleted)
+    {
+        if (ItemManager.GetInstance() != null)
         {
-            ShowError("This port is not part of any connection");
-            return;
+            ItemManager.GetInstance().StartDialogue("This connection is already completed");
         }
-        
-        if (set.isCompleted)
-        {
-            ShowError("This connection is already completed");
-            return;
-        }
+        return;
+    }
+
         
         ConnectionType connectionType = hoveredPoint.GetConnectionType();
         
@@ -153,13 +147,19 @@ public class LinePuller : MonoBehaviour
         }
         
         UpdateLineTransform(startPoint.GetPosition(), playerTransform.position);
+        
+        // Play line pull sound
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(GameSFX.LinePull);
+        }
     }
     
     void TryCompletePulling()
     {
         if (hoveredPoint == null)
         {
-            return; // Just keep pulling
+            return;
         }
         
         if (PortManager.Instance == null)
@@ -167,23 +167,28 @@ public class LinePuller : MonoBehaviour
             return;
         }
         
-        // Check if wrong color - DON'T cancel line
         if (!PortManager.Instance.CanConnect(startPoint, hoveredPoint))
         {
             ShowError("Wrong connection! Colors must match");
-            return; // Keep line active
+            return;
         }
         
         float distance = Vector3.Distance(startPoint.GetPosition(), hoveredPoint.GetPosition());
         
         if (distance < minStretchDistance)
         {
-            return; // Just keep pulling
+            return;
         }
         
         UpdateLineTransform(startPoint.GetPosition(), hoveredPoint.GetPosition());
         
         PortManager.Instance.CompleteConnection(startPoint, hoveredPoint, activeLine);
+        
+        // Play success sound
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(GameSFX.ConnectionSuccess);
+        }
         
         currentState = LineState.Idle;
         startPoint = null;
@@ -195,6 +200,12 @@ public class LinePuller : MonoBehaviour
     {
         if (activeLine != null)
             Destroy(activeLine);
+        
+        // Play cancel sound
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(GameSFX.LineCancel);
+        }
         
         currentState = LineState.Idle;
         startPoint = null;
@@ -217,19 +228,16 @@ public class LinePuller : MonoBehaviour
         }
     }
     
-    void ShowError(string message)
+    void ShowError(string customMessage = null)
     {
-        if (errorSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(errorSound);
-        }
-        
         InteractObject interactObject = GetComponent<InteractObject>();
         if (interactObject != null)
         {
-            interactObject.ShowMessage(message);
+            interactObject.ShowConnectionMessage("wrong", true);
         }
         
-        Debug.Log(message);
+        Debug.Log("Wrong connection");
     }
+
+
 }

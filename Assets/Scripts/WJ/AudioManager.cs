@@ -19,12 +19,18 @@ public class GameSoundEntry
     [Range(0f, 1f)] public float volume = 1f;
 }
 
-public class GameAudioManager : MonoBehaviour
+public class AudioManager : MonoBehaviour
 {
-    public static GameAudioManager Instance { get; private set; }
+    public static AudioManager Instance { get; private set; }
     
+    [Header("Sound Library")]
     [SerializeField] private List<GameSoundEntry> soundLibrary = new List<GameSoundEntry>();
+    
+    [Header("Pool Settings")]
     [SerializeField] private int poolSize = 8;
+    
+    [Header("Volume Control")]
+    [SerializeField][Range(0f, 1f)] private float masterVolume = 1f;
     
     private Dictionary<GameSFX, GameSoundEntry> _lookup;
     private List<AudioSource> _pool;
@@ -32,15 +38,23 @@ public class GameAudioManager : MonoBehaviour
     
     void Awake()
     {
-        if (Instance != null && Instance != this)
+        // Allow multiple instances - don't destroy, just set as instance
+        if (Instance == null)
         {
-            Destroy(gameObject);
-            return;
+            Instance = this;
         }
-        Instance = this;
         
         BuildLookup();
         CreatePool();
+    }
+    
+    void OnDestroy()
+    {
+        // Clear instance reference if this is the current instance
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
     
     private void BuildLookup()
@@ -51,6 +65,8 @@ public class GameAudioManager : MonoBehaviour
             if (s.clip == null) continue;
             if (!_lookup.ContainsKey(s.id))
                 _lookup.Add(s.id, s);
+            else
+                Debug.LogWarning($"GameAudioManager: Duplicate SFX entry: {s.id}");
         }
     }
     
@@ -77,7 +93,7 @@ public class GameAudioManager : MonoBehaviour
         {
             if (!s.isPlaying) return s;
         }
-        return _pool[0];
+        return _pool[0]; // Fallback to first source
     }
     
     public void PlaySFX(GameSFX id)
@@ -90,11 +106,15 @@ public class GameAudioManager : MonoBehaviour
             return;
         }
         
-        if (entry.clip == null) return;
+        if (entry.clip == null)
+        {
+            Debug.LogWarning($"GameAudioManager: No clip assigned for {id}");
+            return;
+        }
         
         var src = GetAvailableSource();
         src.clip = entry.clip;
-        src.volume = entry.volume;
+        src.volume = entry.volume * masterVolume;
         src.Play();
     }
     
@@ -104,7 +124,17 @@ public class GameAudioManager : MonoBehaviour
         
         var src = GetAvailableSource();
         src.clip = clip;
-        src.volume = volume;
+        src.volume = volume * masterVolume;
         src.Play();
+    }
+    
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = Mathf.Clamp01(volume);
+    }
+    
+    public float GetMasterVolume()
+    {
+        return masterVolume;
     }
 }

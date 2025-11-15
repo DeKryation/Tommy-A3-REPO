@@ -8,6 +8,10 @@ public class LinePuller : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Camera playerCamera;
     
+    [Header("Audio")]
+    [SerializeField] private AudioClip errorSound;
+    [SerializeField] private AudioSource audioSource;
+    
     private enum LineState { Idle, Pulling }
     private LineState currentState = LineState.Idle;
     
@@ -20,6 +24,15 @@ public class LinePuller : MonoBehaviour
     {
         if (playerCamera == null)
             playerCamera = Camera.main;
+        
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+        }
     }
     
     void Update()
@@ -75,6 +88,8 @@ public class LinePuller : MonoBehaviour
     
     public bool TryHandleInteraction()
     {
+        UpdateRaycast();
+        
         if (currentState == LineState.Idle && hoveredPoint != null)
         {
             TryStartPulling();
@@ -103,13 +118,13 @@ public class LinePuller : MonoBehaviour
         ConnectionSet set = PortManager.Instance.GetSetForPort(hoveredPoint);
         if (set == null)
         {
-            Debug.Log("This port is not part of any connection set");
+            ShowError("This port is not part of any connection");
             return;
         }
         
         if (set.isCompleted)
         {
-            Debug.Log("This connection is already completed");
+            ShowError("This connection is already completed");
             return;
         }
         
@@ -126,11 +141,11 @@ public class LinePuller : MonoBehaviour
         {
             activeLineRenderer.positionCount = 2;
             
-            if (connectionType.lineMaterial != null)
+            if (connectionType != null && connectionType.lineMaterial != null)
             {
                 activeLineRenderer.material = connectionType.lineMaterial;
             }
-            else
+            else if (connectionType != null)
             {
                 activeLineRenderer.startColor = connectionType.typeColor;
                 activeLineRenderer.endColor = connectionType.typeColor;
@@ -142,19 +157,28 @@ public class LinePuller : MonoBehaviour
     
     void TryCompletePulling()
     {
-        if (hoveredPoint == null || PortManager.Instance == null || 
-            !PortManager.Instance.CanConnect(startPoint, hoveredPoint))
+        if (hoveredPoint == null)
         {
-            CancelPulling();
+            return; // Just keep pulling
+        }
+        
+        if (PortManager.Instance == null)
+        {
             return;
+        }
+        
+        // Check if wrong color - DON'T cancel line
+        if (!PortManager.Instance.CanConnect(startPoint, hoveredPoint))
+        {
+            ShowError("Wrong connection! Colors must match");
+            return; // Keep line active
         }
         
         float distance = Vector3.Distance(startPoint.GetPosition(), hoveredPoint.GetPosition());
         
         if (distance < minStretchDistance)
         {
-            CancelPulling();
-            return;
+            return; // Just keep pulling
         }
         
         UpdateLineTransform(startPoint.GetPosition(), hoveredPoint.GetPosition());
@@ -191,5 +215,21 @@ public class LinePuller : MonoBehaviour
             activeLineRenderer.SetPosition(0, start);
             activeLineRenderer.SetPosition(1, end);
         }
+    }
+    
+    void ShowError(string message)
+    {
+        if (errorSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(errorSound);
+        }
+        
+        InteractObject interactObject = GetComponent<InteractObject>();
+        if (interactObject != null)
+        {
+            interactObject.ShowMessage(message);
+        }
+        
+        Debug.Log(message);
     }
 }

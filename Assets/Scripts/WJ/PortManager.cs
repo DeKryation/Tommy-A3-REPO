@@ -142,7 +142,6 @@ public class PortManager : MonoBehaviour
             Debug.LogError("Breaker reference is NULL in PortManager!");
         }
         
-        // Show message
         InteractObject interactObject = FindObjectOfType<InteractObject>();
         if (interactObject != null)
         {

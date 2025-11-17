@@ -35,6 +35,7 @@ public class CameraSwitchRayCast : MonoBehaviour
 
     void RayCastHit()
     {
+
         Ray ray = main.ScreenPointToRay(Input.mousePosition); //shoot out the ray
         RaycastHit hit;
 
@@ -60,6 +61,13 @@ public class CameraSwitchRayCast : MonoBehaviour
                 cam1.gameObject.SetActive(false);
                 cam2.gameObject.SetActive(false);
             }
+            //else if(hit.transform.name == "BackButton")
+            //{
+            //    cam3.gameObject.SetActive(false);
+            //    cam1.gameObject.SetActive(false);
+            //    cam2.gameObject.SetActive(false);
+            //}
+
         }
     }
 

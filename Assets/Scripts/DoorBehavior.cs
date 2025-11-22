@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -53,6 +54,9 @@ public class DoorBehavior : MonoBehaviour
     [SerializeField] private float cameraTiltDegrees = 10f;
     [SerializeField] private float fovKick = 15f;
     [SerializeField] private float fovRecoverTime = 0.35f;
+
+    [Header("Scene Transition")]
+    [SerializeField] private string nextSceneName = "MainMenu";
 
     [Header("Controller Interop (optional)")]
     [SerializeField] private MonoBehaviour controllerToDisable;
@@ -127,6 +131,7 @@ public class DoorBehavior : MonoBehaviour
             return;
 
         ItemManager itemMgr = ItemManager.GetInstance();
+
         if (itemMgr != null && itemMgr.selectedItemID == requiredItemID)
         {
             // Player has the correct key selected
@@ -134,7 +139,9 @@ public class DoorBehavior : MonoBehaviour
         }
         else
         {
-            itemMgr.StartDialogue("The door is locked.");
+            if (itemMgr != null)
+                itemMgr.StartDialogue("The door is locked.");
+
             Debug.Log("Door is locked. You need the key with item ID " + requiredItemID + " selected.");
         }
     }
@@ -395,6 +402,7 @@ public class DoorBehavior : MonoBehaviour
             yield return null;
         }
 
+        // straighten camera back out on the yaw it ended with
         cameraToTurn.rotation = Quaternion.Euler(0f, cameraToTurn.eulerAngles.y, 0f);
 
         if (_cam && fovRecoverTime > 0f)
@@ -409,6 +417,16 @@ public class DoorBehavior : MonoBehaviour
                 yield return null;
             }
             _cam.fieldOfView = baseFov;
+        }
+        else if (_cam)
+        {
+            _cam.fieldOfView = baseFov;
+        }
+
+        // === SCENE TRANSITION AFTER JUMP-OUT ===
+        if (!string.IsNullOrEmpty(nextSceneName))
+        {
+            SceneManager.LoadScene(nextSceneName);
         }
     }
 

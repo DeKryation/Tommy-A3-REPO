@@ -126,6 +126,7 @@ public class DoorBehavior : MonoBehaviour
         }
         else
         {
+            itemMgr.StartDialogue("The door is locked.");
             Debug.Log("Door is locked. You need the key with item ID " + requiredItemID + " selected.");
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 namespace NavKeypad
 {
     public class KeypadButton : MonoBehaviour
@@ -13,7 +14,6 @@ namespace NavKeypad
         [SerializeField] private float buttonPressedTime = 0.1f;
         [Header("Component References")]
         [SerializeField] private Keypad keypad;
-
 
         public void PressButton()
         {

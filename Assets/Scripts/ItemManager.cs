@@ -242,7 +242,7 @@ public class ItemManager : MonoBehaviour
 
         //if dont have any items
         if (itemsAmount == 0)
-            SelectItem(-1);
+            SelectItem(0);
     }
 
 }

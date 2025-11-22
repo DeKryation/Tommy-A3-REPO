@@ -13779,6 +13779,8 @@ MonoBehaviour:
   failResetDelay: 0.25
   camResetDuration: 0.35
   retryDelayAfterReset: 0.35
+  requiredItemID: 4
+  playerTag: Player
 --- !u!4 &345109024
 Transform:
   m_ObjectHideFlags: 0
@@ -39772,7 +39774,7 @@ GameObject:
   - component: {fileID: 1075928042}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

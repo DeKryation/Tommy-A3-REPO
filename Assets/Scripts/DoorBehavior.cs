@@ -19,29 +19,28 @@ public class DoorBehavior : MonoBehaviour
     [SerializeField] private float doorSmoothing = 12f;    // visual smoothing
 
     [Header("Win/Lose")]
-    [SerializeField] private float attackDuration = 4f; // hold out for this long
-    [SerializeField] private bool autoStartOnAwake = true;
+    [SerializeField] private float attackDuration = 4f;
+    [SerializeField] private bool autoStartOnAwake = false; // do not auto start by default
 
     [Header("Snap Shut on Success")]
     [SerializeField] private bool snapOnSuccess = true;
-    [SerializeField] private float snapSpeedDegPerSec = 540f; // how fast it slams shut
+    [SerializeField] private float snapSpeedDegPerSec = 540f;
     [SerializeField] private bool lockClosedAfterSuccess = true;
 
     [Header("UI Prompt")]
-    [SerializeField] private GameObject mashPrompt;   // assign MashEPrompt (TMP text or image)
-    [SerializeField] private CanvasGroup mashPromptCg; // optional: for quick fade
+    [SerializeField] private GameObject mashPrompt;
+    [SerializeField] private CanvasGroup mashPromptCg;
 
-    // Camera sequence on success
     [Header("Camera Turn On Success")]
-    [SerializeField] private Transform cameraToTurn;      // leave empty to auto-grab Camera.main
-    [SerializeField] private float camTurnDegrees = 180f; // positive = turn around
+    [SerializeField] private Transform cameraToTurn;
+    [SerializeField] private float camTurnDegrees = 180f;
     [SerializeField] private float camTurnDuration = 0.6f;
-    [SerializeField] private bool camTurnInLocalSpace = false; // rotate local vs world Y
+    [SerializeField] private bool camTurnInLocalSpace = false;
 
     [Header("Then Move Forward")]
     [SerializeField] private float moveForwardDistance = 20f;
     [SerializeField] private float moveForwardDuration = 0.8f;
-    [SerializeField] private AnimationCurve moveEase = null; // optional; if null uses smoothstep
+    [SerializeField] private AnimationCurve moveEase = null;
 
     [Header("Jump-Out Effect")]
     [SerializeField] private float jumpDuration = 0.7f;
@@ -52,15 +51,18 @@ public class DoorBehavior : MonoBehaviour
     [SerializeField] private float fovRecoverTime = 0.35f;
 
     [Header("Controller Interop (optional)")]
-    [SerializeField] private MonoBehaviour controllerToDisable; // your FP/TP controller script
+    [SerializeField] private MonoBehaviour controllerToDisable;
     [SerializeField] private bool disableControllerDuringSequence = true;
 
-    // On Fail: Reset and Retry
     [Header("On Fail: Reset & Retry")]
     [SerializeField] private bool autoRetryOnFail = true;
     [SerializeField] private float failResetDelay = 0.25f;
     [SerializeField] private float camResetDuration = 0.35f;
     [SerializeField] private float retryDelayAfterReset = 0.35f;
+
+    [Header("Key Requirement")]
+    [SerializeField] private int requiredItemID = 4;       // key item id
+    [SerializeField] private string playerTag = "Player";  // tag on the player object
 
     // runtime
     private float _currentAngle;
@@ -96,8 +98,36 @@ public class DoorBehavior : MonoBehaviour
 
     private void Start()
     {
+        // start slightly open
         SetAngle(Mathf.Clamp(startAjarAngle, closedAngle, maxOpenAngle));
-        if (autoStartOnAwake) StartQTE(attackDuration);
+
+        // optional auto start (leave false for your use case)
+        if (autoStartOnAwake)
+        {
+            StartQTE(attackDuration);
+        }
+    }
+
+    // Only start the scenario when player with key collides with door
+    private void OnCollisionEnter(Collision other)
+    {
+        if (!other.collider.CompareTag(playerTag))
+            return;
+
+        // Do not restart if already active or finished
+        if (_active || _snappingClosed || _lockedClosed)
+            return;
+
+        ItemManager itemMgr = ItemManager.GetInstance();
+        if (itemMgr != null && itemMgr.selectedItemID == requiredItemID)
+        {
+            // Player has the correct key selected
+            StartQTE(attackDuration);
+        }
+        else
+        {
+            Debug.Log("Door is locked. You need the key with item ID " + requiredItemID + " selected.");
+        }
     }
 
     private void Update()
@@ -106,7 +136,7 @@ public class DoorBehavior : MonoBehaviour
 
         if (_failed)
         {
-            // Fail reset is handled by coroutine; nothing to do here.
+            // Fail reset is handled by coroutine
             return;
         }
 
@@ -133,12 +163,15 @@ public class DoorBehavior : MonoBehaviour
         if (Keyboard.current != null)
             ePressed |= Keyboard.current.eKey.wasPressedThisFrame;
 #endif
-        if (ePressed) _targetAngle = Mathf.Clamp(_targetAngle - pressCloseDegrees, closedAngle, maxOpenAngle);
+        if (ePressed)
+            _targetAngle = Mathf.Clamp(_targetAngle - pressCloseDegrees, closedAngle, maxOpenAngle);
 
         LerpDoorTowards(_targetAngle);
 
-        if (ApproximatelyGE(_currentAngle, maxOpenAngle, 0.25f)) Fail();
-        if (Time.time >= _endTime) Succeed();
+        if (ApproximatelyGE(_currentAngle, maxOpenAngle, 0.25f))
+            Fail();
+        if (Time.time >= _endTime)
+            Succeed();
     }
 
     // Public API
@@ -167,20 +200,24 @@ public class DoorBehavior : MonoBehaviour
         ShowPrompt(true);
     }
 
-    public void CancelQTE() => _active = false;
+    public void CancelQTE()
+    {
+        _active = false;
+    }
 
     // Internals
     private void LerpDoorTowards(float target)
     {
         _currentAngle = Mathf.LerpAngle(
-            _currentAngle, target,
+            _currentAngle,
+            target,
             1f - Mathf.Exp(-doorSmoothing * Time.deltaTime));
         ApplyAngle(_currentAngle);
     }
 
     private void ApplyAngle(float y)
     {
-        var e = doorTransform.localEulerAngles;
+        Vector3 e = doorTransform.localEulerAngles;
         e.y = y;
         doorTransform.localEulerAngles = e;
     }
@@ -199,7 +236,11 @@ public class DoorBehavior : MonoBehaviour
         _failed = true;
         ShowPrompt(false);
 
-        if (_sequenceCo != null) { StopCoroutine(_sequenceCo); _sequenceCo = null; }
+        if (_sequenceCo != null)
+        {
+            StopCoroutine(_sequenceCo);
+            _sequenceCo = null;
+        }
 
         if (autoRetryOnFail)
             _sequenceCo = StartCoroutine(FailResetAndRetry());
@@ -224,7 +265,10 @@ public class DoorBehavior : MonoBehaviour
             _sequenceCo = StartCoroutine(TurnMoveJumpSequence());
     }
 
-    private static bool ApproximatelyGE(float a, float b, float eps) => a > b - eps;
+    private static bool ApproximatelyGE(float a, float b, float eps)
+    {
+        return a > b - eps;
+    }
 
     private void ShowPrompt(bool show)
     {
@@ -348,7 +392,8 @@ public class DoorBehavior : MonoBehaviour
     // Fail -> reset -> retry
     private System.Collections.IEnumerator FailResetAndRetry()
     {
-        if (failResetDelay > 0f) yield return new WaitForSeconds(failResetDelay);
+        if (failResetDelay > 0f)
+            yield return new WaitForSeconds(failResetDelay);
 
         if (_hasCamBaseline && cameraToTurn)
         {
@@ -366,16 +411,22 @@ public class DoorBehavior : MonoBehaviour
 
                 cameraToTurn.position = Vector3.LerpUnclamped(startPos, _camBasePos, s);
 
-                if (camTurnInLocalSpace) cameraToTurn.localRotation = Quaternion.Slerp(startRotLocal, _camBaseRotLocal, s);
-                else cameraToTurn.rotation = Quaternion.Slerp(startRotWorld, _camBaseRotWorld, s);
+                if (camTurnInLocalSpace)
+                    cameraToTurn.localRotation = Quaternion.Slerp(startRotLocal, _camBaseRotLocal, s);
+                else
+                    cameraToTurn.rotation = Quaternion.Slerp(startRotWorld, _camBaseRotWorld, s);
 
-                if (_cam) _cam.fieldOfView = Mathf.Lerp(startFov, _camBaseFov, s);
+                if (_cam)
+                    _cam.fieldOfView = Mathf.Lerp(startFov, _camBaseFov, s);
 
                 yield return null;
             }
 
-            if (camTurnInLocalSpace) cameraToTurn.localRotation = _camBaseRotLocal;
-            else cameraToTurn.rotation = _camBaseRotWorld;
+            if (camTurnInLocalSpace)
+                cameraToTurn.localRotation = _camBaseRotLocal;
+            else
+                cameraToTurn.rotation = _camBaseRotWorld;
+
             cameraToTurn.position = _camBasePos;
             if (_cam) _cam.fieldOfView = _camBaseFov;
         }
@@ -383,7 +434,8 @@ public class DoorBehavior : MonoBehaviour
         SetAngle(Mathf.Clamp(startAjarAngle, closedAngle, maxOpenAngle));
         _failed = false;
 
-        if (retryDelayAfterReset > 0f) yield return new WaitForSeconds(retryDelayAfterReset);
+        if (retryDelayAfterReset > 0f)
+            yield return new WaitForSeconds(retryDelayAfterReset);
 
         StartQTE(attackDuration);
         _sequenceCo = null;

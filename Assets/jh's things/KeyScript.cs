@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class KeyScript : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class KeyScript : MonoBehaviour
             {
                 keyHud.SetActive(true);
             }
+            ItemManager.GetInstance().TryGettingItem(GetComponent<ItemData>());
             StartCoroutine(Die());
         }
     }

@@ -700,7 +700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delay: 14
   cont: {fileID: 261585330}
-  nextScene: Alex
+  nextScene: Main Game
 --- !u!1 &1178544451
 GameObject:
   m_ObjectHideFlags: 0

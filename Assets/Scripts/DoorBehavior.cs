@@ -31,6 +31,10 @@ public class DoorBehavior : MonoBehaviour
     [SerializeField] private GameObject mashPrompt;
     [SerializeField] private CanvasGroup mashPromptCg;
 
+    [Header("Run Prompt (3 second text)")]
+    [SerializeField] private GameObject runPrompt;
+    [SerializeField] private float runPromptDuration = 3f;
+
     [Header("Camera Turn On Success")]
     [SerializeField] private Transform cameraToTurn;
     [SerializeField] private float camTurnDegrees = 180f;
@@ -100,6 +104,10 @@ public class DoorBehavior : MonoBehaviour
     {
         // start slightly open
         SetAngle(Mathf.Clamp(startAjarAngle, closedAngle, maxOpenAngle));
+
+        // make sure run prompt is hidden at start
+        if (runPrompt != null)
+            runPrompt.SetActive(false);
 
         // optional auto start (leave false for your use case)
         if (autoStartOnAwake)
@@ -284,6 +292,10 @@ public class DoorBehavior : MonoBehaviour
         if (disableControllerDuringSequence && controllerToDisable)
             controllerToDisable.enabled = false;
 
+        // show the "run" text for a few seconds when we start turning/running
+        if (runPrompt != null)
+            StartCoroutine(ShowRunPrompt());
+
         yield return StartCoroutine(TurnCameraCoroutine());
 
         if (moveForwardDistance != 0f && moveForwardDuration > 0f)
@@ -296,6 +308,16 @@ public class DoorBehavior : MonoBehaviour
             controllerToDisable.enabled = true;
 
         _sequenceCo = null;
+    }
+
+    private System.Collections.IEnumerator ShowRunPrompt()
+    {
+        if (runPrompt == null)
+            yield break;
+
+        runPrompt.SetActive(true);
+        yield return new WaitForSeconds(runPromptDuration);
+        runPrompt.SetActive(false);
     }
 
     private System.Collections.IEnumerator TurnCameraCoroutine()

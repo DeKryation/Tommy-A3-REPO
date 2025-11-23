@@ -4,11 +4,29 @@ using UnityEngine;
 
 public enum GameSFX
 {
+    // --- System / UI Feedback ---
     ConnectionError,
     ConnectionSuccess,
     LinePull,
     LineCancel,
-    HoverPort
+    HoverPort,
+
+    // --- Music / Background ---
+    AmbientBGM,
+    MainMenu,
+
+    // --- Environment Sounds ---
+    DoorSlam,
+    DoorOpen,
+    Fan,
+    CrabScuttle,
+    CCTVPress,
+
+    // --- Player Actions ---
+    PlayerFootsteps,
+    Vaulting,
+    PickUpSecrewdriver,
+    UnscrewVent
 }
 
 [Serializable]

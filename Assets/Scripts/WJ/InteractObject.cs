@@ -54,11 +54,15 @@ public class InteractObject : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        HandleRaycastHighlight();
-        HandleInteraction();
-    }
+void Update()
+{
+    // Prevent interaction logic while game is paused
+    if (PauseScript.isPaused)
+        return;    
+
+    HandleRaycastHighlight();
+    HandleInteraction();
+}
 
     private void HandleRaycastHighlight()
     {

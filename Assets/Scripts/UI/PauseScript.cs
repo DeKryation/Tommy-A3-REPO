@@ -32,6 +32,10 @@ public class PauseScript : MonoBehaviour
         pauseCanvas.SetActive(false);
 
         Time.timeScale = 1.0f;
+
+        // Lock and hide cursor for gameplay
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void Pause()
@@ -40,5 +44,10 @@ public class PauseScript : MonoBehaviour
         pauseCanvas.SetActive(true);
 
         Time.timeScale = 0f;
+
+        // Unlock and show cursor for UI
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
+
 }

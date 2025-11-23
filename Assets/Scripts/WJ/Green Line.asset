@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c74f85db66cbe794f8e6af637008e39e, type: 3}
-  m_Name: Blue Line
+  m_Name: Green Line
   m_EditorClassIdentifier: 
-  typeName: Blue line
-  typeColor: {r: 0, g: 0.049598217, b: 1, a: 1}
-  lineMaterial: {fileID: 2100000, guid: a05f8d17cc8d2dd48928ba704fc2f575, type: 2}
+  typeName: Green line
+  typeColor: {r: 0.006026864, g: 1, b: 0, a: 1}
+  lineMaterial: {fileID: 2100000, guid: 0c774bfd415e24b40b69c9c13e07aa70, type: 2}

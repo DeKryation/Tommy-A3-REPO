@@ -5545,7 +5545,7 @@ MonoBehaviour:
   - {fileID: 7028600879844309665}
   hintMessage: I need to find the tip.
   gainMessage: A screwdriver head? Where's the tip??
-  InvSlotSprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  InvSlotSprite: {fileID: -1157590892, guid: b02d94aab2ce58f41ad6d298f2d35752, type: 3}
 --- !u!136 &157611311
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -28664,7 +28664,7 @@ MonoBehaviour:
   - {fileID: 771584951}
   hintMessage: I can use this to unscrew things.
   gainMessage: Aha! I can make a screwdriver!
-  InvSlotSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  InvSlotSprite: {fileID: 536476156, guid: b02d94aab2ce58f41ad6d298f2d35752, type: 3}
 --- !u!114 &771584953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49694,7 +49694,7 @@ MonoBehaviour:
   - {fileID: 5729537688669707873}
   hintMessage: I need to find the handle.
   gainMessage: A screwdriver end? Where's the head??
-  InvSlotSprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  InvSlotSprite: {fileID: -519283609, guid: b02d94aab2ce58f41ad6d298f2d35752, type: 3}
 --- !u!136 &1345553485
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -80461,7 +80461,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!223 &8815070303459606591
 Canvas:
   m_ObjectHideFlags: 0

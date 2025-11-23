@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &620161914213008160
 Transform:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
   camScript: {fileID: 0}
   crabModel: {fileID: 3180181170969406093}
   moveSpeed: 1
-  jumpForce: 4
+  jumpForce: 8
   rotationSpeed: 0.1
 --- !u!114 &8212774472955422065
 MonoBehaviour:

@@ -21,6 +21,7 @@ public class ProgBar : MonoBehaviour
             Destroy(this);
         else
             instance = this;
+            barFill.fillAmount = 0;
     }
 
 

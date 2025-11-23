@@ -68516,21 +68516,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectionSets:
-  - setName: Red port
+  - pb: {fileID: 0}
+    setName: Red port
     connectionType: {fileID: 11400000, guid: 3eb3bd8d804c9c94c94246a99399f4ed, type: 2}
     portA: {fileID: 1996827686}
     portB: {fileID: 218621260}
     linePrefab: {fileID: 586790696473816945, guid: da79337539d89da479eb4f12e703a66e, type: 3}
     activeLineInstance: {fileID: 0}
     isCompleted: 0
-  - setName: Blue port
+  - pb: {fileID: 0}
+    setName: Blue port
     connectionType: {fileID: 11400000, guid: 2af7de041471e4c43bb87885a07e6417, type: 2}
     portA: {fileID: 148788879}
     portB: {fileID: 1635309120}
     linePrefab: {fileID: 586790696473816945, guid: da79337539d89da479eb4f12e703a66e, type: 3}
     activeLineInstance: {fileID: 0}
     isCompleted: 0
-  - setName: Green port
+  - pb: {fileID: 0}
+    setName: Green port
     connectionType: {fileID: 11400000, guid: f57fc70a66f5dba4fbc767df11c4e9ab, type: 2}
     portA: {fileID: 842083931}
     portB: {fileID: 1103284239}
@@ -74824,6 +74827,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2030966626}
+  - component: {fileID: 2030966627}
   m_Layer: 5
   m_Name: Bar
   m_TagString: Untagged
@@ -74856,6 +74860,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2030966627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030966625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 405c3d8a51b4d294b9d37cdb106b0ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barFill: {fileID: 2050630111}
 --- !u!1001 &2036430190
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -79812,7 +79829,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 465}
+  m_AnchoredPosition: {x: 0, y: 367}
   m_SizeDelta: {x: 850, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3871022427736560819
@@ -80444,7 +80461,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!223 &8815070303459606591
 Canvas:
   m_ObjectHideFlags: 0

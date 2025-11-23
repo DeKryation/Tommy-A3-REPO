@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DetachHandlerScript : MonoBehaviour
@@ -11,6 +12,7 @@ public class DetachHandlerScript : MonoBehaviour
     public Transform spawnPoint;
 
     [SerializeField] private bool isPlayer = true;
+    [SerializeField] private bool okayGo = true;
 
     private static DetachHandlerScript _instance;
     public void Awake()
@@ -26,8 +28,9 @@ public class DetachHandlerScript : MonoBehaviour
     }
     public void DoSwitch()
     {
-        if (isPlayer == true)
+        if (isPlayer == true && okayGo == true)
         {
+            
             isPlayer = false;
             crab.SetActive(true);
             crabCanvas.SetActive(true);
@@ -36,8 +39,9 @@ public class DetachHandlerScript : MonoBehaviour
             dialogueCanvas.SetActive(false);
             pCamHolder.SetActive(false);
             crab.transform.position = spawnPoint.position;
+            okayGo = false;
         }
-        else
+        else if (isPlayer == false && okayGo == true)
         {
             isPlayer = true;
             crab.SetActive(false);
@@ -46,6 +50,14 @@ public class DetachHandlerScript : MonoBehaviour
             invCanvas.SetActive(true);
             dialogueCanvas.SetActive(true);
             pCamHolder.SetActive(true);
+            okayGo = false;
         }
+        StartCoroutine(Wait());
+    }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(0.3f);
+        okayGo = true;
     }
 }

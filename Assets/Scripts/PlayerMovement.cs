@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontalInp = Input.GetAxisRaw("Horizontal");
         verticalInp = Input.GetAxisRaw("Vertical");
-        if (Input.GetKeyDown(KeyCode.LeftControl)) // Left Ctrl to switch between crab and player.
+        if (Input.GetKeyDown(KeyCode.C)) // C to switch between crab and player.
         {
             DetachHandlerScript.GetInstance().DoSwitch();
         }

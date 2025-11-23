@@ -72,6 +72,8 @@ public class DoorBehavior : MonoBehaviour
     [SerializeField] private int requiredItemID = 4;       // key item id
     [SerializeField] private string playerTag = "Player";  // tag on the player object
 
+    public EndScreen es;
+
     // runtime
     private float _currentAngle;
     private float _targetAngle;
@@ -424,10 +426,14 @@ public class DoorBehavior : MonoBehaviour
         }
 
         // === SCENE TRANSITION AFTER JUMP-OUT ===
+        /*
         if (!string.IsNullOrEmpty(nextSceneName))
         {
             SceneManager.LoadScene(nextSceneName);
         }
+        */
+
+        es.SetBool(true);
     }
 
     // Fail -> reset -> retry

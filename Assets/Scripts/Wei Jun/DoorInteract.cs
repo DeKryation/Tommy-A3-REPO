@@ -94,12 +94,15 @@ public class DoorInteract : InteractScript
     {
         isOpen = true;
         isMoving = true;
-        if (openSound != null && AudioManager.Instance != null)
+
+        // Play door open sound
+        if (AudioManager.Instance != null)
         {
-            AudioManager.Instance.PlayClip(openSound);
+            AudioManager.Instance.PlaySFX(GameSFX.DoorOpen);
         }
         Debug.Log("Door opening");
     }
+
 
     private void CloseDoor()
     {

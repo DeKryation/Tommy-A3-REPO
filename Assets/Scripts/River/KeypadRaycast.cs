@@ -17,6 +17,10 @@ public class KeypadRaycast : MonoBehaviour
                 if (hit.collider.TryGetComponent(out ButtonClick keypadButton))
                 {
                     keypadButton.KeypadClicked.Invoke();
+                    if (AudioManager.Instance != null)
+                    {
+                        AudioManager.Instance.PlaySFX(GameSFX.CCTVPress);   
+                    }
                 }
             }
         }

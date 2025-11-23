@@ -47,6 +47,10 @@ public class keypad2 : MonoBehaviour
             onAccessYAY?.Invoke();
             //play granted
             yield return new WaitForSeconds(doorOpenTime);
+            if (AudioManager.Instance != null)
+            {
+                 AudioManager.Instance.PlaySFX(GameSFX.Breaker);   
+            }
         }
 
         else
@@ -56,6 +60,10 @@ public class keypad2 : MonoBehaviour
             yield return new WaitForSeconds(1.5f);
             keypadDisplayText.text = string.Empty;
             userInput = string.Empty;
+            if (AudioManager.Instance != null)
+            {
+                 AudioManager.Instance.PlaySFX(GameSFX.ConnectionError);   
+            }
         }
     }
 }

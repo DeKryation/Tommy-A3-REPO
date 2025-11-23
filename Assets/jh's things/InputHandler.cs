@@ -22,6 +22,7 @@ public class InputHandler : MonoBehaviour
     InputAction pLook;
     InputAction pInteract;
     InputAction pSwitch;
+    private bool isScuttling = false;
     private void Awake()
     {
         crabInput = new Crab_InputSys();
@@ -71,6 +72,12 @@ public class InputHandler : MonoBehaviour
     {
         //Debug.Log("jump");
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(GameSFX.Vaulting);            
+        }
+
     }
 
     private void TryInteract(InputAction.CallbackContext context)
@@ -88,8 +95,13 @@ public class InputHandler : MonoBehaviour
 
     private void TryAttach(InputAction.CallbackContext context)
     {
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.StopLoopingSFX(GameSFX.CrabScuttle);
+
         DetachHandlerScript.GetInstance().DoSwitch();
     }
+
     public void SetInteractable(GameObject incoming)
     {
         interactable = incoming;
@@ -108,6 +120,20 @@ public class InputHandler : MonoBehaviour
         moveDir.y = 0f;
         moveDir.Normalize();
         rb.MovePosition(rb.position + moveDir * moveSpeed * Time.fixedDeltaTime);
+
+        bool shouldScuttle = rawMoveDir.sqrMagnitude > 0.01f; // true if moving
+        if (shouldScuttle && !isScuttling)
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlayLoopingSFX(GameSFX.CrabScuttle);
+            isScuttling = true;
+        }
+        else if (!shouldScuttle && isScuttling)
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.StopLoopingSFX(GameSFX.CrabScuttle);
+            isScuttling = false;
+        }
     }
     //private void OnTriggerEnter(Collider other)
     //{

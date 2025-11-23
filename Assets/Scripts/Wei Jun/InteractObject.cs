@@ -87,11 +87,6 @@ void Update()
                 {
                     connectionPoint.Highlight(true);
                     ShowHoverText(hoverPortMessage);
-                    
-                    if (audioManager != null)
-                    {
-                        audioManager.PlaySFX(GameSFX.HoverPort);
-                    }
                 }
                 // Check for BreakerInteract
                 else
@@ -156,15 +151,17 @@ void Update()
             Ray ray = new Ray(cam.transform.position, cam.transform.forward);
             RaycastHit hit;
             
-            if (Physics.Raycast(ray, out hit, interactRange, interactionMask))
+        if (Physics.Raycast(ray, out hit, interactRange, interactionMask))
+        {
+            InteractScript interactScript = hit.transform.GetComponent<InteractScript>();
+            if (interactScript != null)
             {
-                InteractScript interactScript = hit.transform.GetComponent<InteractScript>();
-                if (interactScript != null)
-                {
-                    interactScript.DoOnInteract();
-                    return;
-                }
+                interactScript.DoOnInteract();
+                if (audioManager != null)
+                    audioManager.PlaySFX(GameSFX.PickUp);
+                return;
             }
+        }
             
             // Fallback: ItemManager
             ItemManager.GetInstance().GetItemInfo(ItemManager.GetInstance().selectedItemID);

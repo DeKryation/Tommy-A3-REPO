@@ -166,6 +166,13 @@ public class DoorBehavior : MonoBehaviour
             if (Mathf.Abs(Mathf.DeltaAngle(_currentAngle, closedAngle)) < 0.1f)
             {
                 ApplyAngle(closedAngle);
+
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySFX(GameSFX.DoorSlam);   
+                }
+
+
                 _snappingClosed = false;
                 if (lockClosedAfterSuccess) _lockedClosed = true;
             }

@@ -49,6 +49,11 @@ public class SafeDoor : MonoBehaviour
         if (_opened) return;
         _startTime = Time.time + Mathf.Max(0f, delayBeforeOpen);
         _opening = true;
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(GameSFX.DoorOpen);   
+        }
     }
 
     public void OpenInstant()

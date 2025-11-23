@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
 
+    private bool isMoving = false;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -24,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     {
         MyInput();
         SpeedControl();
+        HandleMovementSFX();
 
         rb.linearDamping = drag;
     }
@@ -57,6 +60,24 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+        }
+    }
+
+    private void HandleMovementSFX()
+    {
+        bool shouldMove = Mathf.Abs(horizontalInp) > 0.01f || Mathf.Abs(verticalInp) > 0.01f;
+
+        if (shouldMove && !isMoving)
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlayLoopingSFX(GameSFX.PlayerFootsteps);
+            isMoving = true;
+        }
+        else if (!shouldMove && isMoving)
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.StopLoopingSFX(GameSFX.PlayerFootsteps);
+            isMoving = false;
         }
     }
 }

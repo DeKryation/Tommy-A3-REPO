@@ -48,21 +48,30 @@ public class CameraSwitchRayCast : MonoBehaviour
                 cam1.gameObject.SetActive(true);
                 cam2.gameObject.SetActive(false);
                 cam3.gameObject.SetActive(false);
-                //cctv_cam switch sfx here
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySFX(GameSFX.CCTVPress);   
+                }
             }
             else if(hit.transform.name == "Button_2")
             {
                 cam2.gameObject.SetActive(true);
                 cam1.gameObject.SetActive(false);
                 cam3.gameObject.SetActive(false);
-                //cctv_cam switch sfx here
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySFX(GameSFX.CCTVPress);   
+                }
             }
             else if(hit.transform.name == "Button_3")
             {
                 cam3.gameObject.SetActive(true);
                 cam1.gameObject.SetActive(false);
                 cam2.gameObject.SetActive(false);
-                //cctv_cam switch sfx here
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySFX(GameSFX.CCTVPress);   
+                }
             }
            
         }

@@ -235,6 +235,11 @@ void TryStartPulling()
         {
             interactObject.ShowConnectionMessage("wrong", true);
         }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(GameSFX.ConnectionError);
+        }
         
         Debug.Log("Wrong connection");
     }

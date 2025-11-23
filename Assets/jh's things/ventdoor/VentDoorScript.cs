@@ -12,6 +12,11 @@ public class VentDoorScript : InteractScript
         if (ItemManager.GetInstance().selectedItemID == 3) //ID for screwdriver is 3!!
         {
             anim.SetBool("ventDoorUnlocked", true);
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(GameSFX.UnscrewVent);   
+            }
         }
     }
 

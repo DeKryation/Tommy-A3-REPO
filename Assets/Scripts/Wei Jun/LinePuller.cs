@@ -148,7 +148,6 @@ void TryStartPulling()
         
         UpdateLineTransform(startPoint.GetPosition(), playerTransform.position);
         
-        // Play line pull sound
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlaySFX(GameSFX.LinePull);
@@ -184,7 +183,6 @@ void TryStartPulling()
         
         PortManager.Instance.CompleteConnection(startPoint, hoveredPoint, activeLine);
         
-        // Play success sound
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlaySFX(GameSFX.ConnectionSuccess);

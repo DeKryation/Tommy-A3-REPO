@@ -54,7 +54,6 @@ public class AudioManager : MonoBehaviour
     private List<AudioSource> _pool;
     private Transform _poolRoot;
 
-    // New: Track looping clips by SFX type (only one loop per type)
     private Dictionary<GameSFX, AudioSource> _loopingSources = new Dictionary<GameSFX, AudioSource>();
 
     void Awake()
@@ -112,7 +111,7 @@ public class AudioManager : MonoBehaviour
         {
             if (!s.isPlaying) return s;
         }
-        return _pool[0]; // Fallback to first source
+        return _pool[0];
     }
 
     public void PlaySFX(GameSFX id)

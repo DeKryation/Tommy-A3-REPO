@@ -56,7 +56,6 @@ public class InteractObject : MonoBehaviour
 
 void Update()
 {
-    // Prevent interaction logic while game is paused
     if (PauseScript.isPaused)
         return;    
 
@@ -146,7 +145,7 @@ void Update()
                 return;
             }
             
-            // Priority 2: InteractScript (includes InteractableItem for items)
+            // Priority 2: InteractScript includes InteractableItem for items
             Camera cam = Camera.main;
             Ray ray = new Ray(cam.transform.position, cam.transform.forward);
             RaycastHit hit;

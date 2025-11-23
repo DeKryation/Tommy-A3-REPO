@@ -9,7 +9,7 @@ public class DoorInteract : InteractScript
     [SerializeField] private bool canClose = true;
 
     [Header("Lock Settings")]
-    [SerializeField] private BreakerInteract breaker;                 // Reference to your BreakerInteract
+    [SerializeField] private BreakerInteract breaker;                 
     [SerializeField] private string lockedHoverText = "Power is still off.";
     [SerializeField] private string lockedMessage = "You need to turn the lights on first!";
     
@@ -48,16 +48,13 @@ public class DoorInteract : InteractScript
 
     public override void DoOnInteract()
     {
-        // Check if breaker is required and off
         if (breaker != null && !breaker.IsOn())
         {
-            // Play locked sound if you want
             if (lockedSound != null && AudioManager.Instance != null)
             {
                 AudioManager.Instance.PlayClip(lockedSound);
             }
 
-            // Show warning via InteractObject system
             InteractObject io = FindObjectOfType<InteractObject>();
             if (io != null)
                 io.ShowMessage(lockedMessage, true);
@@ -79,7 +76,6 @@ public class DoorInteract : InteractScript
         }
     }
 
-    // Show correct hover text based on state
     public string GetHoverText()
     {
         if (breaker != null && !breaker.IsOn())
@@ -95,7 +91,6 @@ public class DoorInteract : InteractScript
         isOpen = true;
         isMoving = true;
 
-        // Play door open sound
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlaySFX(GameSFX.DoorOpen);

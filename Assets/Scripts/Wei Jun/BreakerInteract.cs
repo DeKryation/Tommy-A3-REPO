@@ -3,12 +3,10 @@ using UnityEngine;
 public class BreakerInteract : InteractScript
 {
     [Header("Breaker Door")]
-    [SerializeField] private GameObject breakerDoorObject; // Door to snap (assign in Inspector)
+    [SerializeField] private GameObject breakerDoorObject;
     [Header("Progress Bar")]
-    [SerializeField] private ProgBar progBar; // Assign your ProgBar UI in Inspector (recommended)
+    [SerializeField] private ProgBar progBar;
     [Header("Sound")]
-    // (Optional) you may want to expose clip here if you aren't using AudioManager
-    // [SerializeField] private AudioClip breakerClip;
 
     private bool isUnlocked = false;
     private bool isOn = false;
@@ -42,18 +40,15 @@ public class BreakerInteract : InteractScript
             return;
         }
 
-        // Snap local X to 270 (=-90) and Z to 75, keep Y unchanged
         Transform t = breakerDoorObject.transform;
         Vector3 euler = t.localEulerAngles;
         t.localEulerAngles = new Vector3(270f, euler.y, 75f);
 
         isOn = true;
 
-        // Play SFX
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlaySFX(GameSFX.Breaker);
 
-        // Progress bar (via Inspector reference)
         if (progBar != null)
         {
             progBar.SetFill(100);

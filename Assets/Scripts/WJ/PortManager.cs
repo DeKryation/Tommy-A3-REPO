@@ -4,6 +4,8 @@ using System.Collections.Generic;
 [System.Serializable]
 public class ConnectionSet
 {
+    public ProgBar pb;
+
     public string setName = "New Connection";
     public ConnectionType connectionType;
     public ConnectionPoint portA;
@@ -136,6 +138,8 @@ public class PortManager : MonoBehaviour
         {
             Debug.Log("Calling UnlockBreaker()");
             breaker.UnlockBreaker();
+
+            ProgBar.GetInstance().SetFill(25);
         }
         else
         {

@@ -105,9 +105,14 @@ public class ItemManager : MonoBehaviour
                 {
                     StartDialogue(item.gainMessage);
                 }
+                if (item.itemID == 4)
+                {
+                    ProgBar.GetInstance().SetFill(75);
+                }
             }
             else
             {
+                ProgBar.GetInstance().SetFill(50);
                 ItemData a = null;
                 for (int i = 0; i < collectedItems.Count; i++)
                 {

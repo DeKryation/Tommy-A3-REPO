@@ -136,6 +136,7 @@ public class DoorBehavior : MonoBehaviour
 
         if (itemMgr != null && itemMgr.selectedItemID == requiredItemID)
         {
+            ProgBar.GetInstance().SetFill(100);
             // Player has the correct key selected
             StartQTE(attackDuration);
         }

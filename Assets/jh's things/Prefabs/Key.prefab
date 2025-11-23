@@ -5059,4 +5059,4 @@ MonoBehaviour:
   objectsToRemove: []
   hintMessage: 
   gainMessage: The Door Key!
-  InvSlotSprite: {fileID: 0}
+  InvSlotSprite: {fileID: -1650445406, guid: b02d94aab2ce58f41ad6d298f2d35752, type: 3}

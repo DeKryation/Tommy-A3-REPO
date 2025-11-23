@@ -4905,6 +4905,7 @@ GameObject:
   - component: {fileID: 740192572362193405}
   - component: {fileID: 6214872111878094143}
   - component: {fileID: 3427812576944768382}
+  - component: {fileID: 2689402560322817754}
   m_Layer: 0
   m_Name: Key
   m_TagString: Untagged
@@ -4922,7 +4923,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -3.891, y: 0.307, z: 4.414}
-  m_LocalScale: {x: 0.05, y: 0.07, z: 0.05}
+  m_LocalScale: {x: 0.05, y: 0.07, z: 0.050000004}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5477933512430319690}
@@ -5039,3 +5040,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10, y: 2, z: 10.000002}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2689402560322817754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8711115586646266163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bc6f7f2f3425ec4297ad2284f35c1d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: 4
+  reqItemID: -1
+  mergeItemID: -1
+  objectName: Key
+  objectsToRemove: []
+  hintMessage: 
+  gainMessage: The Door Key!
+  InvSlotSprite: {fileID: 0}

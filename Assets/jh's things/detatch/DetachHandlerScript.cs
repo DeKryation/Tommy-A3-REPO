@@ -35,7 +35,7 @@ public class DetachHandlerScript : MonoBehaviour
             crab.SetActive(true);
             crabCanvas.SetActive(true);
             player.SetActive(false);
-            invCanvas.SetActive(false);
+            //invCanvas.SetActive(false);
             dialogueCanvas.SetActive(false);
             pCamHolder.SetActive(false);
             crab.transform.position = spawnPoint.position;

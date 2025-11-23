@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace NavKeypad { 
-public class keypadInteractionFPV : MonoBehaviour
+public class KeypadRaycast : MonoBehaviour
 {
-    private Camera cam;
-    private void Awake() => cam = Camera.main;
+    public Camera cam;
     private void Update()
     {
         var ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -15,9 +14,9 @@ public class keypadInteractionFPV : MonoBehaviour
         {
             if (Physics.Raycast(ray, out var hit))
             {
-                if (hit.collider.TryGetComponent(out KeypadButton keypadButton))
+                if (hit.collider.TryGetComponent(out ButtonClick keypadButton))
                 {
-                    keypadButton.PressButton();
+                    keypadButton.KeypadClicked.Invoke();
                 }
             }
         }

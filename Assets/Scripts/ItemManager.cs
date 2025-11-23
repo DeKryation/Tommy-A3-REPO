@@ -44,6 +44,8 @@ public class ItemManager : MonoBehaviour
             instance = this;
 
         dialogueON = false;
+        collectedItems = new List<ItemData>();
+        UpdateInvCanvas();
     }
 
     private void Update()
@@ -136,10 +138,13 @@ public class ItemManager : MonoBehaviour
 
     private bool CheckMerge(int ItemID)
     {
-        foreach(ItemData a in collectedItems)
+        if (ItemID != -1)
         {
-            Debug.Log(a.mergeItemID + " " + ItemID);
-            if(a.mergeItemID == ItemID) { return true; }
+            foreach (ItemData a in collectedItems)
+            {
+                Debug.Log(a.mergeItemID + " " + ItemID);
+                if (a.mergeItemID == ItemID) { return true; }
+            } 
         }
         return false;
     }

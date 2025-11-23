@@ -1,42 +1,61 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 
 public class keypad2 : MonoBehaviour
 {
-    public string password = "1234";
-    private string userInput = " ";
 
-    public AudioClip click;
-    public AudioClip open;
-    public AudioClip no;
-    AudioSource source;
+    [SerializeField] private UnityEvent onAccessYAY;
+    public UnityEvent OnAccessYAY => onAccessYAY;
 
-    public UnityEvent OnEntryAllowed;
+    public float doorOpenTime;
+
+    public string password = "425";
+    private string userInput = string.Empty;
+
+    [SerializeField] private TMP_Text keypadDisplayText;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        userInput = " ";
-        source = GetComponent<AudioSource>();
+        userInput = string.Empty;
     }
 
     // Update is called once per frame
-    void ButtonClicked(string number)
+    public void ButtonClicked(string number)
     {
-        source.Play(); // click sound
-        userInput = number;
-        if (userInput.Length >= 4)
+        //play keypad click
+        if(number == "enter")
         {
-            //check pw
-            if (userInput == password)
-            {
-                source.Play(); //open door sound
-            }
+            StartCoroutine(Check());
+        }
+        else
+        {
+            userInput += number;
+            keypadDisplayText.text = userInput;
+        }
+    }       
 
-            else
-            {
-                userInput = " ";
-                source.Play(); //play no 
-            }
+    public IEnumerator Check()
+    {
+        //check pw
+        if (userInput == password)
+        {
+            keypadDisplayText.text = "GRANTED";
+            onAccessYAY?.Invoke();
+            //play granted
+            yield return new WaitForSeconds(doorOpenTime);
+        }
+
+        else
+        {
+            keypadDisplayText.text = "DENIED";
+            //play denied
+            yield return new WaitForSeconds(1.5f);
+            keypadDisplayText.text = string.Empty;
+            userInput = string.Empty;
         }
     }
 }

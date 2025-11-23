@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 public class SceneTransition : MonoBehaviour
@@ -40,6 +41,16 @@ public class SceneTransition : MonoBehaviour
 
         currentSceneName = SceneManager.GetActiveScene().name;
         HideUI();
+    }
+
+    public void Start()
+    {
+        if(currentSceneName == "MainMenu")
+        {
+            // Unlock and show cursor for UI
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     public string GetCurrentScene()
